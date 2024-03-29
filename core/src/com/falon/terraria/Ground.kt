@@ -20,9 +20,9 @@ class Ground(
     private val baseTimeToNextTexture: Float = 0.3F,
 ) {
 
-    private lateinit var square: PolygonShape
-    private lateinit var img: Texture
-    private lateinit var body: Body
+    private var square: PolygonShape? = null
+    private var img: Texture? = null
+    private var body: Body? = null
     private val timerTasks: MutableList<Timer.Task> = mutableListOf()
     var currentTexturePointer = -1
 
@@ -38,7 +38,7 @@ class Ground(
         body = world.createBody(bodyDef)
 
         square = PolygonShape()
-        square.setAsBox(squareSize, squareSize)
+        square?.setAsBox(squareSize, squareSize)
 
         val fixtureDef = FixtureDef()
         fixtureDef.shape = square
@@ -46,19 +46,23 @@ class Ground(
         fixtureDef.friction = 0.4f
         fixtureDef.restitution = 0.6f
 
-        body.createFixture(fixtureDef)
+        body?.createFixture(fixtureDef)
     }
 
     fun render() {
         batch.begin()
-        batch.draw(img, leftCornerX, leftCornerY, squareSize, squareSize)
+        if (img != null) {
+            batch.draw(img, leftCornerX, leftCornerY, squareSize, squareSize)
+        }
         batch.end()
     }
 
     fun dispose() {
-        world.destroyBody(body)
-        square.dispose()
-        img.dispose()
+        if (body != null) world.destroyBody(body)
+        square?.dispose()
+        square = null
+        img?.dispose()
+        img = null
     }
 
     fun onTouchDown() {

@@ -23,20 +23,31 @@ internal class Terraria : ApplicationAdapter(), InputProcessor {
     override fun create() {
         batch = SpriteBatch()
         world = World(Vector2(0f, -9.8f), true)
+        val squareSize = Gdx.graphics.width * SQUARE_SIZE_RATIO
         grounds = List(NUMBER_OF_COLUMNS) { i ->
             List(NUMBER_OF_ROWS) { j ->
                 Ground(
-                    world,
-                    batch,
-                    listOf("ground0.png", "ground1.png", "ground2.png", "ground3.png"),
-                    100f,
-                    i * 100f,
-                    j * 100f
+                    world = world,
+                    batch = batch,
+                    textures = listOf("ground0.png", "ground1.png", "ground2.png", "ground3.png"),
+                    squareSize = squareSize,
+                    leftCornerX = i * squareSize,
+                    leftCornerY = j * squareSize
                 )
             }
         }.flatten()
         grounds.forEach { it.create() }
-        person = Person(world, batch, "person.png", 600F,600F)
+
+        val personX = Gdx.graphics.width / 2f
+        val groundHeight = NUMBER_OF_ROWS * squareSize
+        val personY = groundHeight + squareSize
+        person = Person(
+            world = world,
+            batch = batch,
+            texturePath = "person.png",
+            startX = personX,
+            startY = personY
+        )
         person.create()
         debugRenderer = Box2DDebugRenderer()
         Gdx.input.inputProcessor = this
@@ -150,12 +161,14 @@ internal class Terraria : ApplicationAdapter(), InputProcessor {
 
     companion object {
 
-        private val NUMBER_OF_COLUMNS = 20
-        private val NUMBER_OF_ROWS = 4
+        private const val NUMBER_OF_COLUMNS = 20
+        private const val NUMBER_OF_ROWS = 4
 
-        private val FORCE_MOVING_BODY = 10000000F
-        private val MARGIN_FOR_MOVING_BODY = 100
+        private const val FORCE_MOVING_BODY = 10000000F
+        private const val MARGIN_FOR_MOVING_BODY = 100
 
-        private val RADIUS_FOR_MINING = 200
+        private const val RADIUS_FOR_MINING = 200
+
+        private const val SQUARE_SIZE_RATIO = 0.06f
     }
 }
