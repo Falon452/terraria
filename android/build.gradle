@@ -14,10 +14,12 @@ android {
         }
 
     }
+
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
+
         applicationId "com.falon.terraria"
         minSdkVersion 19
         targetSdkVersion 34
